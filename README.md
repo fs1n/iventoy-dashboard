@@ -12,6 +12,10 @@ A overview for your iVentoy-Instance. With this overview, you can view all avail
 
 ## Installation
 
+> [!IMPORTANT]  
+> Install the iVentoy-Dashboard on the same server where you installed the iVentoy-Server
+> Replace ```your\.iventoy\.ip\.address``` with your iVentoy-Server ip
+
 ```bash
 sudo apt update -y
 sudo apt install nginx git -y
@@ -26,6 +30,7 @@ sudo cp index.html /var/www/html
 sudo cp favicon.ico /var/www/html
 sudo cp -R assets /var/www/html
 sudo chown -R www-data:www-data /var/www
+sudo sed -i 's/1\.2\.3\.4/your\.iventoy\.ip\.address/g'
 sudo systemctl restart nginx
 ```
 
