@@ -10,6 +10,25 @@ A overview for your iVentoy-Instance. With this overview, you can view all avail
 - Download every ISO
 - Show ISO-informations
 
+## Installation
+
+```bash
+sudo apt update -y
+sudo apt install nginx git -y
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo rm /etc/nginx/sites-available/default
+sudo rm /etc/nginx/sites-enabled/default
+git clone https://github.com/craeckor/iventoy-dashboard.git
+cd iventoy-dashboard
+sudo cp default.conf /etc/nginx/conf.d
+sudo cp index.html /var/www/html
+sudo cp favicon.ico /var/www/html
+sudo cp -R assets /var/www/html
+sudo chown -R www-data:www-data /var/www
+sudo systemctl restart nginx
+```
+
 ## Screenshots
 
 Screenshot 1:
