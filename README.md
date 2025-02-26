@@ -14,6 +14,7 @@ A overview for your iVentoy-Instance. With this overview, you can view all avail
 
 > [!IMPORTANT]  
 > Install the iVentoy-Dashboard on the same server where you installed the iVentoy-Server
+
 > Replace ```your\.iventoy\.ip\.address``` with your iVentoy-Server ip
 
 ```bash
