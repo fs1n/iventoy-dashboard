@@ -25,6 +25,7 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 sudo rm /etc/nginx/sites-available/default
 sudo rm /etc/nginx/sites-enabled/default
+sudo rm -r /var/www/html/*
 git clone https://github.com/craeckor/iventoy-dashboard.git
 cd iventoy-dashboard
 sudo cp default.conf /etc/nginx/conf.d
@@ -32,7 +33,7 @@ sudo cp index.html /var/www/html
 sudo cp favicon.ico /var/www/html
 sudo cp -R assets /var/www/html
 sudo chown -R www-data:www-data /var/www
-sudo sed -i 's/1\.2\.3\.4/your\.iventoy\.ip\.address/g'
+sudo sed -i 's/1\.2\.3\.4/your\.iventoy\.ip\.address/g' /etc/nginx/conf.d/default.conf # Replace your\.iventoy\.ip\.address with Ex. 10\.50\.0\.35
 sudo systemctl restart nginx
 ```
 
