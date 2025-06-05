@@ -3,7 +3,7 @@
 // Dieses Skript nimmt eine ISO-Datei entgegen und speichert sie im iVentoy ISO-Ordner
 
 // Pfad zum iVentoy ISO-Ordner (bitte ggf. anpassen!)
-$isoDir = '/path/to/iventoy/iso'; // <-- ANPASSEN!
+$isoDir = './iventoy-1.0.21/iso'; // <-- ANPASSEN!
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_FILES['iso']) || $_FILES['iso']['error'] !== UPLOAD_ERR_OK) {
