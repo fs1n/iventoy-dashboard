@@ -35,6 +35,39 @@
                 <!-- ISO data will be populated here by loader.js -->
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <form id="iso-upload-form" enctype="multipart/form-data" method="post" action="/upload-iso" class="mb-4">
+                    <div class="input-group">
+                        <input type="file" name="iso" accept=".iso" class="form-control" required>
+                        <button type="submit" class="btn btn-primary">ISO hochladen</button>
+                    </div>
+                </form>
+                <div id="upload-result"></div>
+            </div>
+        </div>
     </div>
+    <script>
+    $('#iso-upload-form').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $('#upload-result').text('');
+        $.ajax({
+            url: '/upload-iso',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                $('#upload-result').html('<span class="text-success">Upload erfolgreich!</span>');
+            },
+            error: function(xhr) {
+                let msg = 'Fehler beim Upload.';
+                if(xhr.responseText) msg += ' ' + xhr.responseText;
+                $('#upload-result').html('<span class="text-danger">'+msg+'</span>');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
