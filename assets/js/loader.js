@@ -1,5 +1,12 @@
-document.addEventListener("DOMContentLoaded", function() {
-    fetch(`http://${window.location.hostname}/api/post`, {
+let dashboardConfig = {};
+
+async function loadConfig() {
+    const res = await fetch('/config');
+    dashboardConfig = await res.json();
+}
+
+async function loadIsoList() {
+    const response = await fetch(`/api/post`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -7,9 +14,8 @@ document.addEventListener("DOMContentLoaded", function() {
             'Cache-Control': 'no-cache'
         },
         body: JSON.stringify({ method: 'get_img_tree' })
-    })
-    .then(response => response.json())
-    .then(data => {
+    });
+    const data = await response.json();
         const container = document.querySelector('#iso-list');
         const table = document.createElement('table');
         table.classList.add('table', 'table-striped', 'table-hover');
@@ -44,6 +50,11 @@ document.addEventListener("DOMContentLoaded", function() {
         container.appendChild(table);
     })
     .catch(error => console.error('Error fetching data:', error));
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+    await loadConfig();
+    loadIsoList();
 });
 
 function viewISO(id) {
@@ -63,7 +74,8 @@ function viewISO(id) {
 
     // Create iframe
     const iframe = document.createElement('iframe');
-    iframe.src = `http://${window.location.hostname}:16000/eiso/id/${id}/`;
+    const port = dashboardConfig.IVENTOY_WEB_PORT || 16000;
+    iframe.src = `http://${window.location.hostname}:${port}/eiso/id/${id}/`;
     iframe.width = '100%';
     iframe.height = '500px';
 
@@ -77,7 +89,8 @@ function viewISO(id) {
 
 function downloadISO(id, pmd5) {
     const downloadLink = document.createElement('a');
-    downloadLink.href = `http://${window.location.hostname}:16000/riso/id/${id}.iso`;
+    const port = dashboardConfig.IVENTOY_WEB_PORT || 16000;
+    downloadLink.href = `http://${window.location.hostname}:${port}/riso/id/${id}.iso`;
     downloadLink.download = `${id}.iso`;
     downloadLink.click();
 }
