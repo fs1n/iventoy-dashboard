@@ -51,7 +51,7 @@ Screenshot 3:
 
 ![screenshot-3](images/screenshot-3.png)
 
-## Used Lbraries
+## Used Libraries
 
 - jQuery 3.7.1 - [jquery.com](https://jquery.com)
 - Bootstrap 5.3.3 - [getbootstrap.com](https://getbootstrap.com)

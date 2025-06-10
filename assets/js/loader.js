@@ -43,7 +43,41 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         container.appendChild(table);
     })
-    .catch(error => console.error('Error fetching data:', error));
+    .catch(error => {
+        const container = document.querySelector('#iso-list');
+        container.innerHTML = `<div class="alert alert-danger">Failed to load ISO data: ${error.message}</div>`;
+        console.error('Error fetching data:', error);
+    });
+
+    const uploadForm = document.querySelector('#upload-form');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fileInput = document.querySelector('#isoFile');
+            const status = document.querySelector('#upload-status');
+            if (!fileInput.files.length) {
+                status.innerHTML = '<div class="alert alert-warning">Please select a file</div>';
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            fetch(`http://${window.location.hostname}/api/upload`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('Upload failed');
+                return r.text();
+            })
+            .then(() => {
+                status.innerHTML = '<div class="alert alert-success">Upload successful</div>';
+            })
+            .catch(err => {
+                status.innerHTML = `<div class="alert alert-danger">Upload failed: ${err.message}</div>`;
+            });
+        });
+    }
 });
 
 function viewISO(id) {
