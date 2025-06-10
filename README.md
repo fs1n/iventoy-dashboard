@@ -30,6 +30,7 @@ git clone https://github.com/craeckor/iventoy-dashboard.git
 cd iventoy-dashboard
 sudo cp default.conf /etc/nginx/conf.d
 sudo cp index.html /var/www/html
+sudo cp upload-iso.php /var/www/html
 sudo cp favicon.ico /var/www/html
 sudo cp -R assets /var/www/html
 sudo chown -R www-data:www-data /var/www

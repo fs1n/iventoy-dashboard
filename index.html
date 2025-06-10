@@ -44,6 +44,57 @@
                 <!-- ISO data will be populated here by loader.js -->
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <form id="iso-upload-form" enctype="multipart/form-data" method="post" action="/upload-iso" class="mb-4">
+                    <div class="input-group">
+                        <input type="file" name="iso" accept=".iso" class="form-control" required>
+                        <button type="submit" class="btn btn-primary">Upload ISO</button>
+                    </div>
+                </form>
+                <div class="progress mb-2" style="height: 25px; display:none;" id="upload-progress-bar">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" id="upload-progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
+                <div id="upload-result"></div>
+            </div>
+        </div>
     </div>
+    <script>
+    $('#iso-upload-form').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $('#upload-result').text('');
+        $('#upload-progress-bar').show();
+        $('#upload-progress').css('width', '0%').attr('aria-valuenow', 0).text('0%');
+        $.ajax({
+            url: '/upload-iso',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress', function(evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                        $('#upload-progress').css('width', percentComplete + '%').attr('aria-valuenow', percentComplete).text(percentComplete + '%');
+                    }
+                }, false);
+                return xhr;
+            },
+            success: function(data) {
+                $('#upload-progress').css('width', '100%').attr('aria-valuenow', 100).text('100%');
+                $('#upload-result').html('<span class="text-success">Upload erfolgreich!</span>');
+                setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
+            },
+            error: function(xhr) {
+                let msg = 'Error while uploading ISO:';
+                if(xhr.responseText) msg += ' ' + xhr.responseText;
+                $('#upload-result').html('<span class="text-danger">'+msg+'</span>');
+                setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
+            }
+        });
+    });
+    </script>
 </body>
 </html>

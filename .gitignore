@@ -1,0 +1,11 @@
+# Ignoriere die iVentoy-Installation und temporäre Dateien
+iventoy-1.0.21/
+iventoy-1.0.21-linux-free.tar.gz
+
+# Optional: weitere typische Ausschlüsse
+*.log
+*.tmp
+*.bak
+.DS_Store
+node_modules/
+.env
