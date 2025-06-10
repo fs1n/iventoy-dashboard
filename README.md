@@ -23,6 +23,13 @@ sudo apt update -y
 sudo apt install nginx git -y
 sudo systemctl enable nginx
 sudo systemctl start nginx
+sudo apt update
+sudo apt install -y lsb-release ca-certificates apt-transport-https software-properties-common
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt install -y php8.3-fpm php8.3-cli php8.3-mbstring php8.3-xml php8.3-curl php8.3-zip
+sudo systemctl enable php8.3-fpm
+sudo systemctl start php8.3-fpm
 sudo rm /etc/nginx/sites-available/default
 sudo rm /etc/nginx/sites-enabled/default
 sudo rm -r /var/www/html/*
