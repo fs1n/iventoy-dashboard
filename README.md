@@ -37,12 +37,15 @@ git clone https://github.com/craeckor/iventoy-dashboard.git
 cd iventoy-dashboard
 sudo cp default.conf /etc/nginx/conf.d
 sudo cp index.html /var/www/html
-sudo cp upload-iso.php /var/www/html
 sudo cp favicon.ico /var/www/html
 sudo cp -R assets /var/www/html
 sudo chown -R www-data:www-data /var/www
-sudo sed -i 's/1\.2\.3\.4/your\.iventoy\.ip\.address/g' /etc/nginx/conf.d/default.conf # Replace your\.iventoy\.ip\.address with Ex. 10\.50\.0\.35
 sudo systemctl restart nginx
+
+# install Node.js dependencies and start the backend
+npm install
+cp .env.example .env # edit values to match your environment
+node server.js &
 ```
 
 ## Screenshots
