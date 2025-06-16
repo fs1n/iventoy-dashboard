@@ -49,12 +49,6 @@ async function loadIsoList() {
         });
         container.appendChild(table);
     })
-    .catch(error => console.error('Error fetching data:', error));
-}
-
-document.addEventListener("DOMContentLoaded", async function() {
-    await loadConfig();
-    loadIsoList();
 });
 
 function viewISO(id) {
