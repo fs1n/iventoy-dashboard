@@ -4,7 +4,6 @@ const path = require('path');
 
 describe('Server endpoints', () => {
   let app;
-  let originalDiskCheck;
   const tmpDir = path.join(__dirname, 'tmp');
 
   before(() => {
@@ -12,7 +11,6 @@ describe('Server endpoints', () => {
     process.env.ISO_DIR = tmpDir;
     process.env.IVENTOY_WEB_PORT = '12345';
     app = require('../app');
-    originalDiskCheck = app.get('diskCheck');
   });
 
   after(() => {
@@ -46,18 +44,5 @@ describe('Server endpoints', () => {
       .expect(200);
 
     fs.unlinkSync(fakeIso);
-  });
-
-  it('POST /upload-iso should fail when disk full', async () => {
-    const fakeIso = path.join(tmpDir, 'test2.iso');
-    fs.writeFileSync(fakeIso, 'dummy');
-    app.set('diskCheck', async () => 0);
-
-    await request(app)
-      .post('/upload-iso')
-      .attach('iso', fakeIso)
-      .expect(507);
-
-    app.set('diskCheck', originalDiskCheck);
   });
 });

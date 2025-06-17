@@ -4,7 +4,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
-const checkDiskSpace = require('check-disk-space').default;
 
 const app = express();
 const ISO_DIR = process.env.ISO_DIR || path.join(__dirname, 'iventoy-1.0.21/iso');
@@ -19,13 +18,6 @@ const upload = multer({storage: storage});
 
 app.use(express.json());
 
-// function to check free disk space, can be overridden in tests
-app.set('diskCheck', async (dir) => {
-    const { free } = await checkDiskSpace(dir);
-    return free;
-});
-
-app.post('/upload-iso', upload.single('iso'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('Fehler beim Upload.');
     }
@@ -33,16 +25,7 @@ app.post('/upload-iso', upload.single('iso'), async (req, res) => {
         fs.unlink(req.file.path, () => {});
         return res.status(400).send('Nur ISO-Dateien erlaubt!');
     }
-    try {
-        const free = await app.get('diskCheck')(ISO_DIR);
-        if (free < req.file.size) {
-            fs.unlink(req.file.path, () => {});
-            return res.status(507).send('Nicht genug Speicherplatz.');
-        }
-    } catch (e) {
-        fs.unlink(req.file.path, () => {});
-        return res.status(500).send('Fehler beim Prüfen des Speicherplatzes.');
-    }
+
     res.send('Upload erfolgreich!');
 });
 
