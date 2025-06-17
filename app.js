@@ -18,7 +18,6 @@ const upload = multer({storage: storage});
 
 app.use(express.json());
 
-app.post('/upload-iso', upload.single('iso'), (req, res) => {
     if (!req.file) {
         return res.status(400).send('Fehler beim Upload.');
     }
@@ -26,6 +25,7 @@ app.post('/upload-iso', upload.single('iso'), (req, res) => {
         fs.unlink(req.file.path, () => {});
         return res.status(400).send('Nur ISO-Dateien erlaubt!');
     }
+
     res.send('Upload erfolgreich!');
 });
 
