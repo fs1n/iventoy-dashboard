@@ -6,16 +6,17 @@ async function loadConfig() {
 }
 
 async function loadIsoList() {
-    const response = await fetch(`/api/post`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-        },
-        body: JSON.stringify({ method: 'get_img_tree' })
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch(`/api/post`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Cache-Control': 'no-cache'
+            },
+            body: JSON.stringify({ method: 'get_img_tree' })
+        });
+        const data = await response.json();
         const container = document.querySelector('#iso-list');
         const table = document.createElement('table');
         table.classList.add('table', 'table-striped', 'table-hover');
@@ -48,7 +49,14 @@ async function loadIsoList() {
             tbody.appendChild(row);
         });
         container.appendChild(table);
-    })
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadConfig();
+    loadIsoList();
 });
 
 function viewISO(id) {
