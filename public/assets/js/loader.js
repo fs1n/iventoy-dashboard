@@ -76,8 +76,7 @@ function viewISO(id) {
 
     // Create iframe
     const iframe = document.createElement('iframe');
-    const port = dashboardConfig.IVENTOY_WEB_PORT || 16000;
-    iframe.src = `http://${window.location.hostname}:${port}/eiso/id/${id}/`;
+    iframe.src = `/proxy/eiso/id/${id}/`;
     iframe.width = '100%';
     iframe.height = '500px';
 
