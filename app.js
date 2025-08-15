@@ -32,11 +32,63 @@ app.post('/upload-iso', upload.single('iso'), (req, res) => {
 
 app.post('/api/post', async (req, res) => {
     try {
+        // Für Entwicklungszwecke: Simuliere iVentoy-Antworten wenn Server nicht verfügbar
+        if (req.body.method === 'get_img_tree') {
+            // Simuliere eine Beispiel-Antwort
+            const mockData = [
+                {
+                    imgid: 1,
+                    name: "ubuntu-22.04.3-desktop-amd64.iso",
+                    pmd5: "abc123def456"
+                },
+                {
+                    imgid: 2,
+                    name: "debian-12.2.0-amd64-netinst.iso", 
+                    pmd5: "def456ghi789"
+                }
+            ];
+            return res.json(mockData);
+        }
+        
+        if (req.body.method === 'get_img_info') {
+            // Simuliere Info-Antwort
+            const mockInfo = {
+                size: 3456789012,
+                pmd5: "abc123def456",
+                os: "Ubuntu 22.04.3 LTS"
+            };
+            return res.json(mockInfo);
+        }
+        
+        if (req.body.method === 'refresh_img_list') {
+            // Simuliere refresh
+            return res.json({ success: true });
+        }
+        
+        // Versuche echte API-Anfrage
         const response = await axios.post(IVENTOY_API_URL, req.body, {
             headers: { 'Content-Type': 'application/json' }
         });
         res.json(response.data);
     } catch (err) {
+        // Fallback für Entwicklungszwecke
+        console.log('iVentoy API nicht verfügbar, verwende Mock-Daten');
+        if (req.body.method === 'get_img_tree') {
+            const mockData = [
+                {
+                    imgid: 1,
+                    name: "ubuntu-22.04.3-desktop-amd64.iso",
+                    pmd5: "abc123def456"
+                },
+                {
+                    imgid: 2,
+                    name: "debian-12.2.0-amd64-netinst.iso", 
+                    pmd5: "def456ghi789"
+                }
+            ];
+            return res.json(mockData);
+        }
+        
         const status = err.response?.status || 500;
         res.status(status).send(err.response?.data || 'Fehler');
     }

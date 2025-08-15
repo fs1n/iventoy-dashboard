@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     <link rel="stylesheet" href="assets/fontawesome/css/fontawesome.css">
     <link rel="stylesheet" href="assets/fontawesome/css/all.css">
+    <script src="assets/js/jquery-3.7.1.js"></script>
     <script src="assets/js/bootstrap.bundle.js"></script>
     <script src="assets/js/loader.js"></script>
-    <script src="assets/js/jquery-3.7.1.js"></script>
     <style>
         #iframe-viewer {
             position: relative;
@@ -51,65 +51,67 @@
         </div>
     </div>
     <script>
-    $('#iso-upload-form').on('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $('#upload-result').text('');
-        $('#upload-progress-bar').show();
-        $('#upload-progress').css('width', '0%').attr('aria-valuenow', 0).text('0%');
-        $.ajax({
-            url: '/upload-iso',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            xhr: function() {
-                var xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener('progress', function(evt) {
-                    if (evt.lengthComputable) {
-                        var percentComplete = Math.round((evt.loaded / evt.total) * 100);
-                        $('#upload-progress').css('width', percentComplete + '%').attr('aria-valuenow', percentComplete).text(percentComplete + '%');
-                    }
-                }, false);
-                return xhr;
-            },
-            success: function(data) {
-                $('#upload-progress').css('width', '100%').attr('aria-valuenow', 100).text('100%');
-                $('#upload-result').html('<span class="text-success">Upload erfolgreich!</span>');
-                
-                // Nach erfolgreichem Upload: Image-Liste auf dem Server refreshen und Tabelle neu laden
-                fetch('/api/post', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Cache-Control': 'no-cache'
-                    },
-                    body: JSON.stringify({ method: 'refresh_img_list' })
-                })
-                .then(() => {
-                    // Tabelle leeren
-                    const container = document.querySelector('#iso-list');
-                    if (container) container.innerHTML = '';
-                    // Neu laden
-                    if (typeof loadIsoList === 'function') {
-                        loadIsoList();
-                    } else {
-                        location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error refreshing image list:', error);
-                });
-                
-                setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
-            },
-            error: function(xhr) {
-                let msg = 'Error while uploading ISO:';
-                if(xhr.responseText) msg += ' ' + xhr.responseText;
-                $('#upload-result').html('<span class="text-danger">'+msg+'</span>');
-                setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
-            }
+    $(document).ready(function() {
+        $('#iso-upload-form').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $('#upload-result').text('');
+            $('#upload-progress-bar').show();
+            $('#upload-progress').css('width', '0%').attr('aria-valuenow', 0).text('0%');
+            $.ajax({
+                url: '/upload-iso',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                            $('#upload-progress').css('width', percentComplete + '%').attr('aria-valuenow', percentComplete).text(percentComplete + '%');
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(data) {
+                    $('#upload-progress').css('width', '100%').attr('aria-valuenow', 100).text('100%');
+                    $('#upload-result').html('<span class="text-success">Upload erfolgreich!</span>');
+                    
+                    // Nach erfolgreichem Upload: Image-Liste auf dem Server refreshen und Tabelle neu laden
+                    fetch('/api/post', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        },
+                        body: JSON.stringify({ method: 'refresh_img_list' })
+                    })
+                    .then(() => {
+                        // Tabelle leeren
+                        const container = document.querySelector('#iso-list');
+                        if (container) container.innerHTML = '';
+                        // Neu laden
+                        if (typeof loadIsoList === 'function') {
+                            loadIsoList();
+                        } else {
+                            location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error refreshing image list:', error);
+                    });
+                    
+                    setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
+                },
+                error: function(xhr) {
+                    let msg = 'Error while uploading ISO:';
+                    if(xhr.responseText) msg += ' ' + xhr.responseText;
+                    $('#upload-result').html('<span class="text-danger">'+msg+'</span>');
+                    setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
+                }
+            });
         });
     });
     </script>

@@ -102,7 +102,7 @@ function showInfo(id) {
     if (infoCache[id]) {
         displayPopover(infoCache[id], id);
     } else {
-        fetch(`http://${window.location.hostname}/api/post`, {
+        fetch(`/api/post`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
