@@ -76,6 +76,32 @@
             success: function(data) {
                 $('#upload-progress').css('width', '100%').attr('aria-valuenow', 100).text('100%');
                 $('#upload-result').html('<span class="text-success">Upload erfolgreich!</span>');
+                
+                // Nach erfolgreichem Upload: Image-Liste auf dem Server refreshen und Tabelle neu laden
+                fetch('/api/post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify({ method: 'refresh_img_list' })
+                })
+                .then(() => {
+                    // Tabelle leeren
+                    const container = document.querySelector('#iso-list');
+                    if (container) container.innerHTML = '';
+                    // Neu laden
+                    if (typeof loadIsoList === 'function') {
+                        loadIsoList();
+                    } else {
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing image list:', error);
+                });
+                
                 setTimeout(function() { $('#upload-progress-bar').fadeOut(); }, 1000);
             },
             error: function(xhr) {
