@@ -35,17 +35,25 @@ async function loadIsoList() {
         const tbody = table.querySelector('tbody');
         data.forEach(item => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td><i class="fa-solid fa-compact-disc fa-2xl"></i></td>
-                <td>${item.name}</td>
-                <td>
+
+            const iconCell = document.createElement('td');
+            iconCell.innerHTML = '<i class="fa-solid fa-compact-disc fa-2xl"></i>';
+            row.appendChild(iconCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = item.name;
+            row.appendChild(nameCell);
+
+            const actionsCell = document.createElement('td');
+            actionsCell.innerHTML = `
                     <button class="btn btn-primary" onclick="viewISO(${item.imgid})">View</button>
-                    <button class="btn btn-secondary" onclick="downloadISO(${item.imgid}, '${item.pmd5}')">Download</button>
-                </td>
-                <td>
-                    <i class="fa-solid fa-circle-info fa-2xl" onmouseover="showInfo(${item.imgid})"></i>
-                </td>
-            `;
+                    <button class="btn btn-secondary" onclick="downloadISO(${item.imgid}, '${item.pmd5}')">Download</button>`;
+            row.appendChild(actionsCell);
+
+            const infoCell = document.createElement('td');
+            infoCell.innerHTML = `<i class="fa-solid fa-circle-info fa-2xl" onmouseover="showInfo(${item.imgid})"></i>`;
+            row.appendChild(infoCell);
+
             tbody.appendChild(row);
         });
         container.appendChild(table);
@@ -159,5 +167,9 @@ function displayPopover(data, id) {
         if (!popover.matches(':hover')) {
             $(infoIcon).popover('hide');
         }
-    }, 3000);
+      }, 3000);
+  }
+
+if (typeof module !== 'undefined') {
+    module.exports = { loadIsoList };
 }
